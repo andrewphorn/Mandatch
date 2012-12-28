@@ -139,7 +139,8 @@ func onMsg(event *irc.Event) {
 }
 
 func onConnect(event *irc.Event) {
-	//http://res.public-craft.com/myip.php
+	//http://res.public-craft.com/myip.php - gets bot's host's IP.
+	// TODO - Do this without involving my own services.
 	resp, err := http.Get("http://res.public-craft.com/myip.php")
 	if err != nil {
 		myIP = "0.0.0.0"
@@ -157,7 +158,7 @@ func onKick(event *irc.Event) {
 	if strings.ToLower(event.Message) != "leave" {
 		if strings.ToLower(event.Arguments[1]) == strings.ToLower(bot.GetNick()) {
 			bot.Join(event.Arguments[0])
-			sendMessage(event.Arguments[0], "If you want me to stay out, kick me with the reason 'leave'.", "")
+			sendMessage(event.Arguments[0], "If you want me to stay out, kick me with the reason 'leave'.", "") // Yep
 		}
 	}
 }
