@@ -1,0 +1,2 @@
+This is the default topic!
+You can use many variables, such as {i}, {u}, {n}, and {s}
