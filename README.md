@@ -41,6 +41,25 @@ The default IRC server is at `irc.esper.net` on port `6667`. Chances are, you do
 
 `web_port` is what port the webserver should listen on. To disable the webserver, set `web_port` to `0`
 
+Topics
+------
+
+# Adding Topics #
+
+Adding topics to Mandatch is as easy as creating files in the `data/topics` directory.
+
+Follow these simple steps to add topics!
+* Locate and enter the `data` directory.
+* Locate and enter the `topics` directory.
+* Make a text file (.txt) using the name of the topic you want to add. For example, to add the topic `test`, the file would be named `text.txt`
+* Open up the text file and add your words to it!
+
+# Variables #
+
+* `{i}` - Is replaced with the bot's IP when sent to the channel. `Example: {i} -> 127.0.0.1`
+* `{n}` - Is replaced with the #target#'s name when sent to the channel. `Example: {n} -> AndrewPH`
+
+
 Reporting Bugs
 --------------
 
