@@ -2,6 +2,7 @@ package main
 
 import (
 	"./irc" // https://github.com/thoj/go-ircevent
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -10,13 +11,36 @@ import (
 	"time"
 )
 
-// Start configuration
+type Config struct {
+	Channels     []string
+	Server       string
+	DefaultTopic string
+	WebPort      int
+	Prefix       string
+	Nick         string
+	Realname     string
+}
 
-var server = "irc.esper.net:6667"
+// Start configuration
+func config() bool {
+	c, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	err = json.Unmarshal([]byte(c), &f)
+	return true
+}
+
+//Get the config before more damage is done!
+var f Config
+
 var channels = []string{"#example", "#example2"}
+var server = "irc.esper.net"
 var bot = irc.IRC("Mandatch", "Mibbit")
 var default_topic = "default"
 var web_port = 80
+var prefix = "!"
 
 // End configuration
 
@@ -113,37 +137,34 @@ func sendMessage(channel string, text string, target string) {
 
 func onMsg(event *irc.Event) {
 	fmt.Println("<["+event.Arguments[0]+"]", event.Nick+">", event.Message)
-	if strings.HasPrefix(event.Message, "! ") {
+	if strings.HasPrefix(event.Message, prefix) {
 		if isAllowed(string(event.Nick)) {
 			channel := event.Arguments[0]
-			msg := strings.Split(event.Message, " ")
+			msgg := event.Message[len(prefix):]
+			msg := strings.Split(msgg, " ")
 			Target := ""
 			Topic := ""
-
-			if msg[0] != "!" {
-				return
-			}
 			ct, _ := strconv.ParseInt(time.Now().UTC().Format("20060102150405"), 10, 64)
 			if ct-5 < lastcmd {
 				return
 			}
 			lastcmd = ct
-			if len(msg) < 2 {
+			if len(msg) < 1 {
 				return
 			}
-			if msg[1] != "" {
-				Target = msg[1]
+			if msg[0] != "" {
+				Target = msg[0]
 			} else {
 				return
 			}
-			if msg[1] == "*" {
+			if msg[0] == "*" {
 				Target = "Everyone"
 			}
-			if len(msg) == 2 {
+			if len(msg) == 1 {
 				Topic = default_topic
 			}
-			if len(msg) == 3 {
-				Topic = msg[2]
+			if len(msg) == 2 {
+				Topic = msg[1]
 			}
 			if Topic == "" {
 				Topic = default_topic
@@ -260,7 +281,7 @@ func WebServer() {
 		derp = derp + foot
 		fmt.Fprintf(w, derp)
 	})
-	if web_port > 0 {
+	if web_port != 0 {
 		wp := strconv.Itoa(web_port)
 		fmt.Println("Serving web requests on port " + string(wp))
 		http.ListenAndServe(":"+string(wp), nil)
@@ -268,6 +289,17 @@ func WebServer() {
 }
 
 func main() {
+	if !config() {
+		fmt.Println("Error in loading config. Aborting.")
+		return
+	}
+	channels = f.Channels
+	server = f.Server
+	bot = irc.IRC(f.Nick, f.Realname)
+	default_topic = f.DefaultTopic
+	web_port = f.WebPort
+	prefix = f.Prefix
+
 	bot.Connect(server)
 	bot.AddCallback("001", onConnect)
 	bot.AddCallback("PRIVMSG", onMsg)

@@ -1,0 +1,9 @@
+{
+	"Nick": 		 "Mandatch",
+	"Realname":	 	 "Mibbit",
+	"Server": 		 "irc.esper.net:6667",
+	"DefaultTopic": "default",
+	"Channels": 	 ["#example","#example2"],
+	"WebPort": 		 80,
+	"Prefix":		 "! "
+}
