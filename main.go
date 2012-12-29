@@ -55,7 +55,7 @@ func isAllowed(user string) bool {
 	return false
 }
 
-func isTopic(topic string) bool {
+func isTopic(topic string, channel string) bool {
 	dirl, err := ioutil.ReadDir("data/topics")
 	if err != nil {
 		return false
@@ -64,14 +64,29 @@ func isTopic(topic string) bool {
 		if topic+".txt" == string(dirl[i].Name()) {
 			return true
 		}
+		if channel == string(dirl[i].Name()) {
+			dirll, err := ioutil.ReadDir("data/topics/" + channel)
+			if err != nil {
+				return false
+			}
+			for l := range dirll {
+				if topic+".txt" == string(dirll[i].Name()) {
+					return true
+				}
+			}
+		}
 	}
 	return false
 }
 
-func getTopic(topic string) string {
+func getTopic(topic string, channel string) string {
 	td, err := ioutil.ReadFile("data/topics/" + topic + ".txt")
 	if err != nil {
-		return ""
+		tdd, err := ioutil.ReadFile("data/topics/" + channel + "/" + topic + ".txt")
+		if err != nil {
+			return ""
+		}
+		return string(tdd)
 	}
 	return string(td)
 }
@@ -129,8 +144,8 @@ func onMsg(event *irc.Event) {
 				Topic = default_topic
 			}
 			Topic = strings.ToLower(Topic)
-			if isTopic(string(Topic)) {
-				Topicstr := getTopic(Topic)
+			if isTopic(string(Topic), channel) {
+				Topicstr := getTopic(Topic, channel)
 				sendMessage(channel, Topicstr, Target)
 			}
 		}
