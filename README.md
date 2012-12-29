@@ -23,6 +23,22 @@ Configuring your brand spanking new copy of Mandatch is dead simple.
 * Save and close `config.json`
 * Run Mandatch.exe (or whatever the executable might be called on your system) and enjoy!
 
+# Mess up your config? #
+
+No problem, I gotcha covered!
+
+```
+{
+	"Nick": 		 "Mandatch",
+	"Realname":	 	 "Mibbit",
+	"Server": 		 "irc.esper.net:6667",
+	"DefaultTopic":  "default",
+	"Channels": 	 ["#example","#example2"],
+	"WebPort": 		 80,
+	"Prefix":		 "? "
+}
+```
+
 
 Topics
 ------
