@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	VERSION = "go-ircevent v2.0"
+	VERSION = "Mandatch V2.2.9"
 )
 
 func (irc *Connection) readLoop() {
