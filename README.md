@@ -54,10 +54,15 @@ Follow these simple steps to add topics!
 * Make a text file (.txt) using the name of the topic you want to add. For example, to add the topic `test`, the file would be named `text.txt`
 * Open up the text file and add your words to it!
 
+If you want to add a topic for a specific channel, after locating and entering the `topics` directory, follow these steps.
+* Create a folder named `#channel`, except replace the part that says `channel` with your channel's name.
+* Follow the rest of the steps given in the previous guide.
+
 # Variables #
 
 * `{i}` - Is replaced with the bot's IP when sent to the channel. `Example: {i} -> 127.0.0.1`
 * `{n}` - Is replaced with the #target#'s name when sent to the channel. `Example: {n} -> AndrewPH`
+* `{c}` - Is replaced with the channel the topic was issued in.
 
 
 Reporting Bugs

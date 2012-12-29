@@ -30,9 +30,10 @@ func NLSplit(str string) []string {
 	return st
 }
 
-func prepForIRC(str string, target string) string {
+func prepForIRC(str string, target string, channel string) string {
 	dorp := strings.Replace(string(str), "{n}", "\x02"+target+"\x02", -1)
 	dorp = strings.Replace(string(dorp), "{i}", myIP, -1)
+	dorp = strings.Replace(string(dorp), "{c}", channel, -1)
 	return dorp
 }
 
@@ -70,13 +71,17 @@ func isTopic(topic string, channel string) bool {
 				return false
 			}
 			for l := range dirll {
-				if topic+".txt" == string(dirll[i].Name()) {
+				if topic+".txt" == string(dirll[l].Name()) {
 					return true
 				}
 			}
 		}
 	}
 	return false
+}
+
+func listDir(dir string) []string {
+	return []string{}
 }
 
 func getTopic(topic string, channel string) string {
@@ -101,7 +106,7 @@ func sendMessage(channel string, text string, target string) {
 		msgs = msgs[0:2]
 	}
 	for i := range msgs {
-		bot.Privmsg(channel, prepForIRC(msgs[i], target))
+		bot.Privmsg(channel, prepForIRC(msgs[i], target, channel))
 	}
 	return
 }
@@ -192,7 +197,11 @@ func WebServer() {
 		for i := range dirl {
 			if strings.HasSuffix(dirl[i].Name(), ".txt") {
 				n := dirl[i].Name()[:len(dirl[i].Name())-4]
-				derp = derp + "<li><a href='/topics/" + n + "'>" + n + "</a></li>"
+				derp = derp + "<li><a href='/topic/" + n + "'>" + n + "</a></li>"
+			}
+			if strings.HasPrefix(dirl[i].Name(), "#") {
+				ddd := strings.Replace(dirl[i].Name(), "#", ",", -1)
+				derp = derp + "<li><a href='/topics/" + ddd + "'>" + dirl[i].Name() + "</a></li>"
 			}
 		}
 		derp = derp + "</ul>"
@@ -200,11 +209,41 @@ func WebServer() {
 		fmt.Fprintf(w, derp)
 	})
 	http.HandleFunc("/topics/", func(w http.ResponseWriter, r *http.Request) {
-		title := r.URL.Path[len("/topics/"):]
-		if isTopic(string(title)) {
+		channell := r.URL.Path[len("/topics/"):]
+		derp := ""
+		derp = derp + head
+		if strings.HasPrefix(channell, ",") {
+			channel := strings.Replace(channell, ",", "#", -1)
+			derp = derp + "<h2>Topics (" + channel + ")</h2><ul>"
+			dirl, err := ioutil.ReadDir("data/topics/" + channel)
+			if err != nil {
+				return
+			}
+			for i := range dirl {
+				if strings.HasSuffix(dirl[i].Name(), ".txt") {
+					n := dirl[i].Name()[:len(dirl[i].Name())-4]
+					derp = derp + "<li><a href='/topic/" + channell + "/" + n + "'>" + n + "</a></li>"
+				}
+			}
+			derp = derp + "</ul>"
+		}
+		derp = derp + foot
+		fmt.Fprintf(w, derp)
+	})
+	http.HandleFunc("/topic/", func(w http.ResponseWriter, r *http.Request) {
+		title := r.URL.Path[len("/topic/"):]
+		channel := ""
+		if strings.HasPrefix(title, ",") {
+			ddd := strings.Split(title, "/")
+			channel = ddd[0]
+			title = ddd[1]
+			channel = strings.Replace(channel, ",", "#", -1)
+		}
+		if isTopic(string(title), channel) {
 			derp := ""
 			derp = derp + head
-			derp = derp + "<pre>" + getTopic(title) + "</pre>"
+			derp = derp + channel + "/" + title
+			derp = derp + "<pre>" + getTopic(title, channel) + "</pre>"
 			derp = derp + foot
 			fmt.Fprintf(w, derp)
 		}
@@ -221,8 +260,10 @@ func WebServer() {
 		derp = derp + foot
 		fmt.Fprintf(w, derp)
 	})
-	if web_port != 0 {
-		http.ListenAndServe(":"+string(web_port), nil)
+	if web_port > 0 {
+		wp := strconv.Itoa(web_port)
+		fmt.Println("Serving web requests on port " + string(wp))
+		http.ListenAndServe(":"+string(wp), nil)
 	}
 }
 
@@ -231,6 +272,6 @@ func main() {
 	bot.AddCallback("001", onConnect)
 	bot.AddCallback("PRIVMSG", onMsg)
 	bot.AddCallback("KICK", onKick)
-	go WebServer()
+	WebServer()
 	bot.Loop()
 }
