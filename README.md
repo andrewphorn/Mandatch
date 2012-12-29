@@ -61,7 +61,7 @@ If you want to add a topic for a specific channel, after locating and entering t
 # Variables #
 
 * `{i}` - Is replaced with the bot's IP when sent to the channel. `Example: {i} -> 127.0.0.1`
-* `{n}` - Is replaced with the #target#'s name when sent to the channel. `Example: {n} -> AndrewPH`
+* `{n}` - Is replaced with the _target_'s name when sent to the channel. `Example: {n} -> AndrewPH`
 * `{c}` - Is replaced with the channel the topic was issued in.
 
 
