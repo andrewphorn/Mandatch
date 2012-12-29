@@ -104,10 +104,6 @@ func isTopic(topic string, channel string) bool {
 	return false
 }
 
-func listDir(dir string) []string {
-	return []string{}
-}
-
 func getTopic(topic string, channel string) string {
 	td, err := ioutil.ReadFile("data/topics/" + topic + ".txt")
 	if err != nil {
