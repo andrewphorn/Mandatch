@@ -8,10 +8,20 @@ Usage
 * ./Mandatch(.exe|what have you)
 * Spam channels.
 
+Development
+-----------
+
+We have a Notifico bot outputting any commits to the github repository into the channel _#mandatch-dev_ on _[irc.esper.net](irc://irc.esper.net:6667/mandatch-dev "irc:// link to our channel")_ that you may join.
+
+Discussion of the bot is also allowed there.
+
+So is idle discussion of anything work-safe.
+
 Editing
 -------
 
 Want to edit Mandatch? Great! Do the github twiddledance and do whatever you want. Sell it for a profit, if you can! Want to claim you made it? Go for it! I'd like it if you didn't, but it's your choice.
+
 
 Configuring Mandatch
 --------------------
