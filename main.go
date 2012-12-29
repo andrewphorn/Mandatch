@@ -19,6 +19,7 @@ type Config struct {
 	Prefix       string
 	Nick         string
 	Realname     string
+	Cooldown     int
 }
 
 // Start configuration
@@ -41,13 +42,14 @@ var bot = irc.IRC("Mandatch", "Mibbit")
 var default_topic = "default"
 var web_port = 80
 var prefix = "!"
+var cooldown = 5
 
 // End configuration
 
 var myIP = "0.0.0.0" // do not touch - automatically obtained.
 var lastcmd = int64(0)
 
-func NLSplit(str string) []string {
+func NLSplit(str string) []string { // Utility to split a string by newline. Cross-platform.
 	rstr := strings.Replace(string(str), "\r", "\n", -1)
 	rstr = strings.Replace(string(rstr), "\n\n", "\n", -1)
 	st := strings.Split(string(rstr), "\n")
@@ -295,6 +297,7 @@ func main() {
 	default_topic = f.DefaultTopic
 	web_port = f.WebPort
 	prefix = f.Prefix
+	cooldown = f.Cooldown
 
 	bot.Connect(server)
 	bot.AddCallback("001", onConnect)

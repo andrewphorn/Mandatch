@@ -35,7 +35,8 @@ No problem, I gotcha covered!
 	"DefaultTopic":  "default",
 	"Channels": 	 ["#example","#example2"],
 	"WebPort": 		 80,
-	"Prefix":		 "? "
+	"Prefix":		 "? ",
+	"Cooldown": 	 5,
 }
 ```
 
