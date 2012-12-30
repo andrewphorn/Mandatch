@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	VERSION = "Mandatch V2.2.9"
+	VERSION = "Mandatch V2.3.2"
 )
 
 func (irc *Connection) readLoop() {
