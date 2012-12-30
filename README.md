@@ -35,20 +35,7 @@ Configuring your brand spanking new copy of Mandatch is dead simple.
 
 # Mess up your config? #
 
-No problem, I gotcha covered!
-
-```
-{
-	"Nick": 		 "Mandatch",
-	"Realname":	 	 "Mibbit",
-	"Server": 		 "irc.esper.net:6667",
-	"DefaultTopic":  "default",
-	"Channels": 	 ["#example","#example2"],
-	"WebPort": 		 80,
-	"Prefix":		 "? ",
-	"Cooldown": 	 5,
-}
-```
+No problems, simply redownload the config from the repository.
 
 
 Topics
