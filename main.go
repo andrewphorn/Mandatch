@@ -21,6 +21,9 @@ type Config struct {
 	Realname     string
 	Cooldown     int64
 	WebDesign    string
+	Identify     bool
+	Nickserv     string
+	Command      string
 }
 
 // Start configuration
@@ -46,6 +49,9 @@ var web_port = 80
 var prefix = "!"
 var cooldown = int64(5)
 var webdesign = "default.html"
+var identify = false
+var nickserv = "Nickserv"
+var ncmd = "IDENTIFY mypassword"
 
 // End configuration
 
@@ -191,6 +197,9 @@ func onConnect(event *irc.Event) {
 		myIP = string(dorp)
 	}
 	resp.Body.Close()
+	if identify {
+		bot.Privmsg(nickserv, ncmd)
+	}
 	for i := range channels {
 		bot.Join(channels[i])
 	}
@@ -310,6 +319,9 @@ func main() {
 	cooldown = f.Cooldown
 	webdesign = f.WebDesign
 	botnick = f.Nick
+	identify = f.Identify
+	nickserv = f.Nickserv
+	ncmd = f.Command
 
 	bot.Connect(server)
 	bot.AddCallback("001", onConnect)
