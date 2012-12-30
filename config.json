@@ -7,4 +7,5 @@
 	"WebPort": 		 80,
 	"Prefix":		 "? ",
 	"Cooldown": 	 5,
+	"WebDesign":	 "default.html"
 }

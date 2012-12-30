@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{b} Webpanel - {p}</title>
+	<!-- [normalize] --> <style>
+article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary{ display:block}audio,canvas,video{ display:inline-block; *display:inline; *zoom:1}audio:not([controls]){ display:none; height:0}[hidden]{ display:none}html{ font-size:100%; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%}html,button,input,select,textarea{ font-family:sans-serif}body{ margin:0}a:focus{ outline:thin dotted}a:active,a:hover{ outline:0}h1{ font-size:2em; margin:0.67em 0}h2{ font-size:1.5em; margin:0.83em 0}h3{ font-size:1.17em; margin:1em 0}h4{ font-size:1em; margin:1.33em 0}h5{ font-size:0.83em; margin:1.67em 0}h6{ font-size:0.67em; margin:2.33em 0}abbr[title]{ border-bottom:1px dotted}b,strong{ font-weight:bold}blockquote{ margin:1em 40px}dfn{ font-style:italic}mark{ background:#ff0; color:#000}p,pre{ margin:1em 0}code,kbd,pre,samp{ font-family:monospace,serif; _font-family:'courier new',monospace; font-size:1em}pre{ white-space:pre; white-space:pre-wrap; word-wrap:break-word}q{ quotes:none}q:before,q:after{ content:''; content:none}small{ font-size:80%}sub,sup{ font-size:75%; line-height:0; position:relative; vertical-align:baseline}sup{ top:-0.5em}sub{ bottom:-0.25em}dl,menu,ol,ul{ margin:1em 0}dd{ margin:0 0 0 40px}menu,ol,ul{ padding:0 0 0 40px}nav ul,nav ol{ list-style:none; list-style-image:none}img{ border:0; -ms-interpolation-mode:bicubic}svg:not(:root){ overflow:hidden}figure{ margin:0}form{ margin:0}fieldset{ border:1px solid #c0c0c0; margin:0 2px; padding:0.35em 0.625em 0.75em}legend{ border:0; padding:0; white-space:normal; *margin-left:-7px}button,input,select,textarea{ font-size:100%; margin:0; vertical-align:baseline; *vertical-align:middle}button,input{ line-height:normal}button,html input[type="button"],input[type="reset"],input[type="submit"]{ -webkit-appearance:button; cursor:pointer; *overflow:visible}button[disabled],input[disabled]{ cursor:default}input[type="checkbox"],input[type="radio"]{ box-sizing:border-box; padding:0; *height:13px; *width:13px}input[type="search"]{ -webkit-appearance:textfield; -moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{ -webkit-appearance:none}button::-moz-focus-inner,input::-moz-focus-inner{ border:0; padding:0}textarea{ overflow:auto; vertical-align:top}table{ border-collapse:collapse; border-spacing:0}
+	</style> <!-- [/normalize] -->
+	<!-- [customcss] --> <style>
+	html {
+		color:#333;
+		font-family:"Arial", sans-serif;
+	}
+	#content pre {
+		color:#111;
+		background-color:#eee;
+		border-color:#ddd;
+		border-radius:1px;
+		border-style:solid;
+	}
+		.container {
+			max-width:1024px;
+			min-width:800px;
+			margin:0 auto 0 auto;
+		}
+		h1 {
+			font-size:4em;
+			color:#FF8C19;
+			text-shadow:0 0.05em #cc6a07;
+			margin-bottom:0;
+			display:inline-block;
+		}
+		h2 {
+			font-size:2em;
+			margin-bottom:0;
+			margin-top:.1em;
+			line-height:2em;
+		}
+		h3 {
+			margin-top:.1em;
+			margin-bottom:3em;
+			font-size:1em;
+		}
+		h1 a{
+			color:inherit;
+			text-decoration:none;
+		}
+
+		a {
+			color:#33721D;
+		}
+
+		.special {
+			color:#497AFF;
+			text-shadow:0 0.05em #1647ee;		
+		}
+	</style> <!-- [/customcss] -->
+</head>
+<body>
+	<div class="container">
+		<h1><a href="/"><span class="special">{b}</span> Webpanel</a></h1>
+		<h2>Current Page: <span class="special">{p}</span></h2>
+		<h3><a href="/alist">View Access List</a> or <a href="/" onclick="history.go(-1);return false">Go Back</a></h3>
+		<div id="content">
+			{c}
+		</div>
+	</div>
+</body>

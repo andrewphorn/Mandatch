@@ -19,7 +19,8 @@ type Config struct {
 	Prefix       string
 	Nick         string
 	Realname     string
-	Cooldown     int
+	Cooldown     int64
+	WebDesign    string
 }
 
 // Start configuration
@@ -39,10 +40,12 @@ var f Config
 var channels = []string{"#example", "#example2"}
 var server = "irc.esper.net"
 var bot = irc.IRC("Mandatch", "Mibbit")
+var botnick = "Mandatch"
 var default_topic = "default"
 var web_port = 80
 var prefix = "!"
-var cooldown = 5
+var cooldown = int64(5)
+var webdesign = "default.html"
 
 // End configuration
 
@@ -143,7 +146,7 @@ func onMsg(event *irc.Event) {
 			Target := ""
 			Topic := ""
 			ct, _ := strconv.ParseInt(time.Now().UTC().Format("20060102150405"), 10, 64)
-			if ct-5 < lastcmd {
+			if ct-cooldown < lastcmd {
 				return
 			}
 			lastcmd = ct
@@ -201,14 +204,27 @@ func onKick(event *irc.Event) {
 		}
 	}
 }
-
+func renderPage(c string, p string) string {
+	tpl, err := ioutil.ReadFile("data/html/" + webdesign)
+	if err != nil {
+		return "There was an issue loading the template data: File not Found."
+	}
+	ret := ""
+	tpll := ""
+	for i := range tpl {
+		tpll = tpll + string(tpl[i])
+	}
+	// If somebody has a better solution for converting a []byte to a string, I'd like to hear it.
+	// Tried, like, everything.
+	ret = strings.Replace(tpll, "{b}", botnick, -1)
+	ret = strings.Replace(ret, "{p}", p, -1)
+	ret = strings.Replace(ret, "{c}", c, -1)
+	return ret
+}
 func WebServer() {
-	head := "<html><body><h1><a href='/''>HOME</a></h1>"
-	foot := "</body></html>"
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		page := "Topics"
 		derp := ""
-		derp = derp + head
-		derp = derp + "<h2>Topics</h2><h3><a href='/alist'>View Access List</a></h3><ul>"
 		dirl, err := ioutil.ReadDir("data/topics")
 		if err != nil {
 			return
@@ -223,17 +239,16 @@ func WebServer() {
 				derp = derp + "<li><a href='/topics/" + ddd + "'>" + dirl[i].Name() + "</a></li>"
 			}
 		}
-		derp = derp + "</ul>"
-		derp = derp + foot
-		fmt.Fprintf(w, derp)
+		fmt.Fprintf(w, renderPage(derp, page))
 	})
 	http.HandleFunc("/topics/", func(w http.ResponseWriter, r *http.Request) {
 		channell := r.URL.Path[len("/topics/"):]
 		derp := ""
-		derp = derp + head
+		page := ""
 		if strings.HasPrefix(channell, ",") {
 			channel := strings.Replace(channell, ",", "#", -1)
 			derp = derp + "<h2>Topics (" + channel + ")</h2><ul>"
+			page = "Topics (" + channel + ")"
 			dirl, err := ioutil.ReadDir("data/topics/" + channel)
 			if err != nil {
 				return
@@ -244,14 +259,13 @@ func WebServer() {
 					derp = derp + "<li><a href='/topic/" + channell + "/" + n + "'>" + n + "</a></li>"
 				}
 			}
-			derp = derp + "</ul>"
 		}
-		derp = derp + foot
-		fmt.Fprintf(w, derp)
+		fmt.Fprintf(w, renderPage(derp, page))
 	})
 	http.HandleFunc("/topic/", func(w http.ResponseWriter, r *http.Request) {
 		title := r.URL.Path[len("/topic/"):]
 		channel := ""
+		page := ""
 		if strings.HasPrefix(title, ",") {
 			ddd := strings.Split(title, "/")
 			channel = ddd[0]
@@ -260,24 +274,20 @@ func WebServer() {
 		}
 		if isTopic(string(title), channel) {
 			derp := ""
-			derp = derp + head
-			derp = derp + channel + "/" + title
+			page = "Viewing Topic (" + channel + "/" + title + ")"
 			derp = derp + "<pre>" + getTopic(title, channel) + "</pre>"
-			derp = derp + foot
-			fmt.Fprintf(w, derp)
+			fmt.Fprintf(w, renderPage(derp, page))
 		}
 	})
 	http.HandleFunc("/alist", func(w http.ResponseWriter, r *http.Request) {
 		derp := ""
-		derp = derp + head
-		derp = derp + "<h2>Access List</h2>"
+		page := "Access List"
 		derp = derp + "<ul>"
 		al := getAList()
 		for i := range al {
 			derp = derp + "<li>" + al[i] + "</li>"
 		}
-		derp = derp + foot
-		fmt.Fprintf(w, derp)
+		fmt.Fprintf(w, renderPage(derp, page))
 	})
 	if web_port != 0 {
 		wp := strconv.Itoa(web_port)
@@ -298,6 +308,8 @@ func main() {
 	web_port = f.WebPort
 	prefix = f.Prefix
 	cooldown = f.Cooldown
+	webdesign = f.WebDesign
+	botnick = f.Nick
 
 	bot.Connect(server)
 	bot.AddCallback("001", onConnect)
