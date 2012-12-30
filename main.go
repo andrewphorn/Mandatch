@@ -294,6 +294,9 @@ func WebServer() {
 		derp = derp + "<ul>"
 		al := getAList()
 		for i := range al {
+			if al[i] == "" {
+				continue
+			}
 			derp = derp + "<li>" + al[i] + "</li>"
 		}
 		fmt.Fprintf(w, renderPage(derp, page))
